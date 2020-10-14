@@ -52,7 +52,7 @@ class eventsuploadController extends Controller
             //  $image_url = Cloudder::show( array ("folder" => 'growgy'));
             $tg = Cloudder::getResult($ft);
             $url = $tg['url'];
-            echo $tg['url'];
+          //  echo $tg['url'];
             $request = new events();
             // $request->file = $image;
 
@@ -133,7 +133,7 @@ public function index(request $request)
             //  $image_url = Cloudder::show( array ("folder" => 'growgy'));
             $tg = Cloudder::getResult($ft);
             $url = $tg['url'];
-            echo $tg['url'];
+           // echo $tg['url'];
             $request = new events();
             // $request->file = $image;
 
@@ -174,13 +174,13 @@ public function index(request $request)
 
 public function getads()
 {
-    $query=events::all();
+    $query=events::orderByDesc('id')->get();
         return response()->json($query, 200);
 }
     public function Eventcontent(request $request)
     {
         $request=request("id");
-        $query = events::where("id",$request)->get();
+        $query = events::where("id",$request)->orderByDesc('id')->get();
         return response()->json($query, 200);
     }
 

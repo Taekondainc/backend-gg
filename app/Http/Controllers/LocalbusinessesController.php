@@ -17,11 +17,16 @@ use App\events;
 use App\subscriber;
 use App\queries;
 use App\rating;
+use App\review;
 use App\trating;
 use Cloudder;
 class LocalbusinessesController extends Controller
 {
-
+public function getallreviews(request $request)
+{
+        $query = review::orderByDesc('id')->get();
+        return response()->json(["data" => $query], 200);
+}
     public function subscribe()
     {
     $request=new subscriber();
@@ -30,7 +35,7 @@ class LocalbusinessesController extends Controller
     }
    public function entry(request $request)
    {$bgt= request('rewgion');
-       echo $bgt;
+   //    echo $bgt;
        $red=request("website");
 if(!empty($red)){
         //    $file=
@@ -116,15 +121,29 @@ $image = base64_encode(file_get_contents($request->file('file')));
       public function getbusiness(request $request)
     {
         $id = request('id');
-        $lb = localbusinesses::where("id", $id)->get();
+        $lb = localbusinesses::where("id", $id)->orderByDesc('id')->get();
 
             return response()->json(["localb" => $lb],200);
+    }
+    public function reviewget(request $request)
+    {
+        $id = request('id');
+        $lb = review::where("uid", $id)->orderByDesc('id')->get();
+
+        return response()->json($lb, 200);
     }
     public function localbsearch(request $request)
     {
         $id = request("data");
 
-        $lb = localbusinesses::where("name",'like', "%{$id}%")->get();
+        $lb = localbusinesses::where("name",'like', "%{$id}%")->orderByDesc('id')->get();
+
+        return response()->json(["data" => $lb], 200);
+    }public function searchreview(request $request)
+    {
+        $id = request("data");
+
+        $lb = review::where("review", 'like', "%{$id}%")->orderByDesc('id')->get();
 
         return response()->json(["data" => $lb], 200);
     }
@@ -132,7 +151,7 @@ $image = base64_encode(file_get_contents($request->file('file')));
     {
         $id = request("data");
 
-        $lb = localbusinesses::where("category", 'like', "%{$id}%")->get();
+        $lb = localbusinesses::where("category", 'like', "%{$id}%")->orderByDesc('id')->get();
 
         return response()->json(["data" => $lb], 200);
     }
@@ -259,17 +278,17 @@ return response()->json(['success'=>"Your products has been added"]);
     }
     public function display(request $request)
     {
-    $query=localbusinesses::all();
+    $query=localbusinesses::orderByDesc('id')->get();
  return response()->json(["data"=>$query], 200);
     }
     public function productsview(request $request)
     {
-        $query = products::all();
+        $query = products::orderByDesc('id')->get();
         return response()->json($query, 200);
     }
     public function vacants(request $request)
     {
-        $query = vacancies::all();
+        $query = vacancies::orderByDesc('id')->get();
         return response()->json($query, 200);
     }
     public function product()
@@ -314,6 +333,17 @@ $name=$product['name']." Products";
        $request->save();
 
 
+    }public function review(request $request)
+    {
+        $request = new review();
+
+
+        $request->review = request("review");
+        $request->uid = request("uid");
+
+
+        $request->save();
+        return response()->json( "Your Submission was a  Success", 200);
     }
     public function blog(request $request)
     {
@@ -385,7 +415,7 @@ $name=$product['name']." Products";
             //  $image_url = Cloudder::show( array ("folder" => 'growgy'));
             $tg = Cloudder::getResult($ft);
              $url=$tg['url'];
-            echo $tg['url'];
+         //   echo $tg['url'];
             $request = new blog();
             // $request->file = $image;
 
@@ -452,13 +482,13 @@ $name=$product['name']." Products";
     public function bloginfo(request $request)
     {
 
-        $query = blog::all();
+        $query = blog::orderByDesc('id')->get();
         return response()->json($query, 200);
     }
     public function blogcontent(request $request)
     {
         $search_id=request("id");
-        $query = blog::where('id',$search_id)->get();
+        $query = blog::where('id',$search_id)->orderByDesc('id')->get();
         return response()->json($query, 200);
     }
 
@@ -466,32 +496,32 @@ $name=$product['name']." Products";
     {
         $search_id = request("data");
         //echo $search_id;
-        $query = events::where('name', 'like', "%{$search_id}%")->get();
+        $query = events::where('name', 'like', "%{$search_id}%")->orderByDesc('id')->get();
         return response()->json($query, 200);
     }
     public function regionsget(request $request)
     {
 
         //echo $search_id;
-        $query = localbusinesses::where('region', "1")->get();
+        $query = localbusinesses::where('region', "1")->orderByDesc('id')->get();
 
-        $query2 = localbusinesses::where('region', "2")->get();
+        $query2 = localbusinesses::where('region', "2")->orderByDesc('id')->get();
 
-        $query3 = localbusinesses::where('region', "3")->get();
+        $query3 = localbusinesses::where('region', "3")->orderByDesc('id')->get();
 
-        $query4 = localbusinesses::where('region', "4")->get();
+        $query4 = localbusinesses::where('region', "4")->orderByDesc('id')->get();
 
-        $query5 = localbusinesses::where('region', "5")->get();
+        $query5 = localbusinesses::where('region', "5")->orderByDesc('id')->get();
 
-        $query6 = localbusinesses::where('region', "6")->get();
+        $query6 = localbusinesses::where('region', "6")->orderByDesc('id')->get();
 
-        $query7 = localbusinesses::where('region', "7")->get();
+        $query7 = localbusinesses::where('region', "7")->orderByDesc('id')->get();
 
-        $query8 = localbusinesses::where('region', "8")->get();
+        $query8 = localbusinesses::where('region', "8")->orderByDesc('id')->get();
 
-        $query9 = localbusinesses::where('region', "9")->get();
+        $query9 = localbusinesses::where('region', "9")->orderByDesc('id')->get();
 
-        $query10 = localbusinesses::where('region', "10")->get();
+        $query10 = localbusinesses::where('region', "10")->orderByDesc('id')->get();
         return response()->json([
             "data" => $query,
              "data1" => $query2,
@@ -511,7 +541,7 @@ $name=$product['name']." Products";
 
         $search_id = "Fashion";
         $query =
-            blog::where('category', 'like', "%{$search_id}%")->get();
+            blog::where('category', 'like', "%{$search_id}%")->orderByDesc('id')->get();
         return response()->json($query, 200);
     }
     public function agriblog(request $request)
@@ -519,7 +549,7 @@ $name=$product['name']." Products";
 
         $search_id = "Agriculture";
         $query =
-            blog::where('category', 'like', "%{$search_id}%")->get();
+            blog::where('category', 'like', "%{$search_id}%")->orderByDesc('id')->get();
         return response()->json($query, 200);
     }
     public function blogbus(request $request)
@@ -527,7 +557,7 @@ $name=$product['name']." Products";
 
         $search_id = "usiness";
         $query =
-            blog::where('category', 'like', "%{$search_id}%")->get();
+            blog::where('category', 'like', "%{$search_id}%")->orderByDesc('id')->get();
         return response()->json($query, 200);
     }
     public function blogsports(request $request)
@@ -535,7 +565,7 @@ $name=$product['name']." Products";
 
         $search_id = "sports";
         $query =
-            blog::where('category', 'like', "%{$search_id}%")->get();
+            blog::where('category', 'like', "%{$search_id}%")->orderByDesc('id')->get();
         return response()->json($query, 200);
     }
     public function blogfood(request $request)
@@ -543,7 +573,7 @@ $name=$product['name']." Products";
 
         $search_id = "food";
         $query =
-            blog::where('category', 'like', "%{$search_id}%")->get();
+            blog::where('category', 'like', "%{$search_id}%")->orderByDesc('id')->get();
         return response()->json($query, 200);
     }
     public function blogTravel(request $request)
@@ -551,7 +581,7 @@ $name=$product['name']." Products";
 
         $search_id = "Travel";
         $query =
-            blog::where('category', 'like', "%{$search_id}%")->get();
+            blog::where('category', 'like', "%{$search_id}%")->orderByDesc('id')->get();
         return response()->json($query, 200);
     }
 
@@ -560,7 +590,7 @@ $name=$product['name']." Products";
 
         $search_id = "Education";
         $query =
-            blog::where('category', 'like', "%{$search_id}%")->get();
+            blog::where('category', 'like', "%{$search_id}%")->orderByDesc('id')->get();
         return response()->json($query, 200);
     }
 
@@ -569,7 +599,7 @@ $name=$product['name']." Products";
 
         $search_id = "others";
         $query =
-            blog::where('category', 'like', "%{$search_id}%")->get();
+            blog::where('category', 'like', "%{$search_id}%")->orderByDesc('id')->get();
         return response()->json($query, 200);
     }
     public function blogpolitic(request $request)
@@ -577,7 +607,7 @@ $name=$product['name']." Products";
 
         $search_id = "politic";
         $query =
-            blog::where('category', 'like', "%{$search_id}%")->get();
+            blog::where('category', 'like', "%{$search_id}%")->orderByDesc('id')->get();
         return response()->json($query, 200);
     }
 
@@ -585,17 +615,21 @@ $name=$product['name']." Products";
     {
         $search_id=request("data");
         //echo $search_id;
-        $query = blog::where('title','like', "%{$search_id}%")->get();
+        $query = blog::where('title','like', "%{$search_id}%")->orderByDesc('id')->get();
         return response()->json($query, 200);
     }
     public function searchvinfo(request $request)
     {
         $search_id = request("data");
         //echo $search_id;
-        $query = vacancies::where('jobdesc', 'like', "%{$search_id}%")->get();
+        $query = vacancies::where('jobdesc', 'like', "%{$search_id}%")->orderByDesc('id')->get();
         return response()->json($query, 200);
     }
-
+public function getb(request $request)
+{
+        $query = Blog::orderBy('id', 'desc')->take(6)->get();
+        return response()->json($query, 200);
+}
 public function QNA(request $request)
 {
        $ft=request("file");
@@ -621,7 +655,7 @@ public function QNA(request $request)
 }  public function QNAS(request $request)
     {
 
-        $query = question::all();
+        $query = question::orderByDesc('id')->get();
         return response()->json( $query, 200);
     }
     public function searchqinfo(request $request)
@@ -629,13 +663,13 @@ public function QNA(request $request)
         $search_id = request("data");
        // echo $search_id;
         //echo $search_id;
-        $query =question::where('description', 'like', "%{$search_id}%")->get();
+        $query =question::where('description', 'like', "%{$search_id}%")->orderByDesc('id')->get();
         return response()->json($query, 200);
     }
     public function getquest(request $request)
     {
         $search_id = request("id");
-        $query = question::where('id', $search_id)->get();
+        $query = question::where('id', $search_id)->orderByDesc('id')->get();
         return response()->json($query, 200);
     }
     public function relpy(request $request)
@@ -652,7 +686,7 @@ public function QNA(request $request)
             $request->file = $file;
             $request->save();
             $id = request("id");
-            $query = comments::where('cid', $id)->get();
+            $query = comments::where('cid', $id)->orderByDesc('id')->get();
             return response()->json($query, 200);
         } else {
 
@@ -663,23 +697,23 @@ public function QNA(request $request)
             $request->file = "null";
             $request->save();
             $id = request("id");
-            $query = comments::where('cid', $id)->get();
+            $query = comments::where('cid', $id)->orderByDesc('id')->get();
             return response()->json($query, 200);
         }}
         public function comments(request $request)
         {
         $id = request("id");
-        $query = comments::where('cid', $id)->get();
+        $query = comments::where('cid', $id)->orderByDesc('id')->get();
         return response()->json($query, 200);
         }
  public function gettotal()
  {
-        $query = localbusinesses::all()->count();
-        $query2 = products::all()->count();
-        $query3 = events::all()->count();
-        $query4 = blog::all()->count();
-        $query5 = question::all()->count();
-        $query6 = vacancies::all()->count();
+        $query = localbusinesses::orderByDesc('id')->get()->count();
+        $query2 = products::orderByDesc('id')->get()->count();
+        $query3 = events::orderByDesc('id')->get()->count();
+        $query4 = blog::orderByDesc('id')->get()->count();
+        $query5 = question::orderByDesc('id')->get()->count();
+        $query6 = vacancies::orderByDesc('id')->get()->count();
         return response()->json(["data" => $query ,"data1" =>$query2, "data2" =>$query3,
          "data3" => $query4,
          "data4" => $query5, "data5" => $query6]);

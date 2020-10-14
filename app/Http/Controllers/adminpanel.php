@@ -12,9 +12,49 @@ use App\blog;
 use App\question;
 use App\comments;
 use App\events;
+use App\review;
+use App\sitereview;
+use App\queries;
 use Cloudder;
 class adminpanel extends Controller
 {
+    public function sponsor(request $request)
+    {
+        $query = queries::orderByDesc('id')->get();
+        return response()->json(["data" => $query], 200);
+    }
+
+    public function getspon(Type $var = null)
+    {
+      $query = queries::orderBy('id', 'desc')->take(6)->get();
+        return response()->json($query, 200);
+    }
+  public function sponsoradd(request $request)
+    {
+        $file = base64_encode(file_get_contents($request->file("file")));
+        $request = new queries();
+        $request->name = request("name");
+        $request->image =$file;;
+        $request->quote = request("quote");
+
+        $request->save();
+    }
+public function reviewresponses(request $request)
+{
+
+        $request = new sitereview();
+        $request->name = request("name");
+        $request->description = request("description");
+        $request->email = request("email");
+
+        $request->save();
+}
+    public function getreviewresponses(request $request)
+    {
+
+        $query = sitereview::orderBy('id', 'desc')->take(6)->get();
+        return response()->json($query, 200);
+    }
     public function Questionsupd(request $request)
     {
 
@@ -36,10 +76,50 @@ class adminpanel extends Controller
            $request->approved = request("approve");
             $request->save();}
     }
+    public function sponsoredit(request $request)
+    {
+
+        $changed = request("changed");
+        if (!empty($changed)) {
+            $id = request("id");
+            $reqc = request("name");
+            $request1 = queries::where('id', $id)->update(['name' => $reqc]);
+            $da = request("quote");
+            $request2 = queries::where('id', $id)->update(['quote' => $da]);
+
+
+            $stan = request("file");
+            $mat = request("file")->getClientOriginalName();
+            $material = $mat . '.' . $stan->getClientOriginalExtension();
+            $allowed = array("jpg", "JPG", "PNG", "jpeg", "bmp", "gif", "png");
+
+            $file_ext = pathinfo($material, PATHINFO_EXTENSION);
+
+            if (in_array($file_ext, $allowed)) {
+                $image = base64_encode(file_get_contents($request->file('file')));
+                $request = queries::where('id', $id)->update(['image' => $image]);
+
+            } else {
+               echo "empty";
+            }
+        } else {
+            $id = request("id");
+            $reqc = request("name");
+            $request1 = queries::where('id', $id)->update(['name' => $reqc]);
+            $da = request("quote");
+            $request2 = queries::where('id', $id)->update(['quote' => $da]);
+        }
+    }
     public function comdelet(request $request)
     {
         $id = request("id");
         $query = comments::where('id', $id)->delete();
+        return response()->json("Success", 200);
+    }
+    public function sponsordelete(request $request)
+    {
+        $id = request("id");
+        $query = queries::where('id', $id)->delete();
         return response()->json("Success", 200);
     }
     public function qdcm(request $request)
@@ -47,6 +127,32 @@ class adminpanel extends Controller
         $id = request("id");
         $query = comments::where('cid', $id)->get();
         return response()->json($query, 200);
+    }
+    public function revdedit(request $request)
+    {
+        $id = request("id");
+        $query = review::where('id', $id)->get();
+        return response()->json($query, 200);
+    }
+    public function sponsorid(request $request)
+    {
+        $id = request("id");
+        $query = queries::where('id', $id)->get();
+        return response()->json($query, 200);
+    }
+
+    public function reviewupd(request $request)
+    {
+
+            $id = request('id');
+
+
+            $name = request("review");
+            $request1 = review::where('id', $id)->update(['review' => $name]);
+
+
+
+
     }
     public function QuestionsupdED(request $request)
     {
@@ -66,10 +172,9 @@ class adminpanel extends Controller
             $approved = request("approve");
             $request2 = question::where('id', $id)->update(['approved' => $approved]);
 
-           $file = base64_encode(file_get_contents($request->file("file")));
+            $file = base64_encode(file_get_contents($request->file("file")));
             $request2 = question::where('id', $id)->update(['file' => $file]);
-
-        }else{
+        } else {
             $id = request('id');
 
             $name = request("name");
@@ -86,7 +191,7 @@ public function adminproducts(request $request)
 {
 
 
-echo "true";
+
         $file = request('productfile');
         foreach ($file as $filer => $x) {
             $selected = request('products');
@@ -121,7 +226,7 @@ echo "true";
 public function localbupdt(request $request)
 {
         $changed = request("changed");
-        echo $changed;
+
         if (!empty($changed)) {
 
         $id = request('id');
@@ -178,7 +283,7 @@ public function localbupdt(request $request)
 
 
         }else{
-            echo "here";
+
             $id = request('id');
             $name = request('business');
             $request1 = localbusinesses::where('id', $id)->update(['name' => $name]);
@@ -238,6 +343,14 @@ public function localbupdt(request $request)
         $request = request("id");
         //  echo $request;
         $request = localbusinesses::where('id', $request)->delete();
+        return response()->json(["tl" => "Success"], 200);
+    }
+    public function
+    revdelet(request $reques)
+    {
+        $request = request("id");
+        //  echo $request;
+        $request = review::where('id', $request)->delete();
         return response()->json(["tl" => "Success"], 200);
     }
 
@@ -429,9 +542,9 @@ $request;
     }
 public function admineditupd(request $request)
 {
-    echo "happen";
+
         $changed = request("changed");
-        echo $changed;
+
         if (!empty($changed)) {
   $id = request('id');
                 $author = request('author');
@@ -477,7 +590,7 @@ public function admineditupd(request $request)
                 //  $image_url = Cloudder::show( array ("folder" => 'growgy'));
                 $tg = Cloudder::getResult($ft);
                 $url = $tg['url'];
-                echo $tg['url'];
+               // echo $tg['url'];
                 $request4 = blog::where('id', $id)->update(["url" => $url]);
                 $request7 = blog::where('id', $id)->update(["image" => $thumbnail]);
 
@@ -505,6 +618,13 @@ public function admineditupd(request $request)
         $query = products::where('products', 'like', "%{$search_id}%")->get();
         return response()->json($query, 200);
     }
+    public function searchreviewdis(request $request)
+    {
+        $search_id = request("data");
+        //echo $search_id;
+        $query = sitereview::where('description', 'like', "%{$search_id}%")->get();
+        return response()->json($query, 200);
+    }
     public function searchlbinfo(request $request)
     {
         $search_id = request("data");
@@ -529,7 +649,7 @@ public function admineditupd(request $request)
         //$encode=base64_encode($picture);
 
 $bgt= request('rewgion');
-       echo $bgt;
+     //  echo $bgt;
        $red=request("website");
 if(!empty($red)){
         //    $file=

@@ -20,14 +20,30 @@ route::post("getbusiness", 'LocalbusinessesController@getbusiness');
 route::post("productget", 'LocalbusinessesController@getproducts');
 route::post("localbsearch", 'LocalbusinessesController@localbsearch');
 route::post("localbsearcht", 'LocalbusinessesController@localbsearcht');
-
 route::post("regionsget", 'LocalbusinessesController@regionsget');
 
-route::post("queries", 'LocalbusinessesController@queries');
-route::post("vqueries", 'LocalbusinessesController@vqueries');
+Route::post('searchreviewdis', 'adminpanel@searchreviewdis');
+Route::post('getreviewresponses', 'adminpanel@getreviewresponses');
+Route::post('submitresponse', 'adminpanel@reviewresponses');
+Route::post('getspon', 'adminpanel@getspon');
+Route::post('sponsor', 'adminpanel@sponsor');
+Route::post('sponsoradd', 'adminpanel@sponsoradd');
+Route::post('sponsorid', 'adminpanel@sponsorid');
+Route::post('sponsoredit', 'adminpanel@sponsoredit');
+Route::post('sponsordelete', 'adminpanel@sponsordelete');
+Route::post('sponsorsearch', 'adminpanel@sponsorsearch');
+
+route::post("revdelet", 'adminpanel@revdelet');
+route::post("reviewupd", 'adminpanel@reviewupd');
+route::post("revdedit", 'adminpanel@revdedit');
+route::post("getallreviews", 'LocalbusinessesController@getallreviews');
+route::post("searchreview", 'LocalbusinessesController@searchreview');
 route::post("subscribe", 'LocalbusinessesController@subscribe');
 
-route::post("localbusinesscontent",'LocalbusinessesController@display');
+route::post("localbusinesscontent", 'LocalbusinessesController@display');
+route::post("revdata", 'LocalbusinessesController@review');
+route::post("localbget", 'LocalbusinessesController@reviewget');
+route::post("getb",'LocalbusinessesController@getb');
 route::post("products", 'LocalbusinessesController@products');
 route::post("productsview", 'LocalbusinessesController@productsview');
 route::post("vacanc", 'LocalbusinessesController@vacants');
